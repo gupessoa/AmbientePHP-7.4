@@ -1,0 +1,43 @@
+version: "3"
+services:
+    web:
+        image: gustavopessoa/php7.4-apache:1.1
+        container_name: web_service
+        restart: always
+        links:
+            - db
+        stdin_open: true
+        tty: true
+        ports:
+            - "8080:80"
+        volumes:
+            - "./src/:/var/www/html/"
+        
+    db:
+        image: mysql
+        container_name: database
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: usuarios
+            MYSQL_USER: gupessoa
+            MYSQL_PASSWORD: gust@v000
+        ports:
+            - "3306:3306"
+        volumes:
+            - "./db:/var/lib/mysql"
+
+    # phpmyadmin
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: pma
+        restart: always
+        links:
+            - db
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
+        ports:
+          - 8081:80
+    
